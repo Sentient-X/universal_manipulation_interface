@@ -38,13 +38,13 @@ def main(session_dir):
         assert csv_path.is_file()
         
         cmd = [
-            'python', str(script_path),
+            sys.executable, str(script_path),
             '--tag_detection', str(tag_path),
             '--csv_trajectory', str(csv_path),
             '--output', str(slam_tag_path),
             '--keyframe_only'
         ]
-        subprocess.run(cmd)
+        subprocess.run(cmd, check=True)
         
         # run gripper range calibration
         script_path = script_dir.joinpath('calibrate_gripper_range.py')
@@ -55,11 +55,11 @@ def main(session_dir):
             tag_path = gripper_dir.joinpath('tag_detection.pkl')
             assert tag_path.is_file()
             cmd = [
-                'python', str(script_path),
+                sys.executable, str(script_path),
                 '--input', str(tag_path),
                 '--output', str(gripper_range_path)
             ]
-            subprocess.run(cmd)
+            subprocess.run(cmd, check=True)
 
             
 # %%

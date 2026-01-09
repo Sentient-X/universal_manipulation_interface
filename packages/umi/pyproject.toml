@@ -28,6 +28,7 @@ dependencies = [
     "imagecodecs>=2023.9.18",
     "pillow",
     "k3d>=2.15", # for verify step
+    "scikit-fda",
 ]
 
 [tool.setuptools]

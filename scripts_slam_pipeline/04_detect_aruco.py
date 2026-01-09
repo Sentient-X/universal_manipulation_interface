@@ -53,7 +53,7 @@ def main(input_dir, camera_intrinsics, aruco_yaml, num_workers):
 
                 # run SLAM
                 cmd = [
-                    'python', script_path,
+                    sys.executable, script_path,
                     '--input', str(video_path),
                     '--output', str(pkl_path),
                     '--intrinsics_json', camera_intrinsics,
