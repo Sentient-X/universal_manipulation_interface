@@ -36,5 +36,9 @@ echo "System dependencies are satisfied."
 # init/sync uv
 echo "Syncing python dependencies with uv..."
 uv sync
+# Explicitly install workspace packages in editable mode to ensure availability
+uv pip install -e packages/umi
 
-echo "Setup complete! Active the environment with: source .venv/bin/activate"
+echo "Setup complete!"
+echo "To activate: source .venv/bin/activate"
+echo "To install training dependencies (optional): uv sync --extra train && uv pip install -e packages/diffusion_policy"

@@ -24,35 +24,41 @@
 <sup>3</sup>Toyota Research Institute
 
 ## 🛠️ Installation
-Only tested on Ubuntu 22.04
+Supported Platforms: macOS (Apple Silicon recommended), Linux (Ubuntu 22.04+).
 
-Install docker following the [official documentation](https://docs.docker.com/engine/install/ubuntu/) and finish [linux-postinstall](https://docs.docker.com/engine/install/linux-postinstall/).
-
-Install system-level dependencies:
+### 1. System Dependencies
+We provide a helper script to install required system dependencies (ffmpeg, exiftool, uv) and setup the environment.
 ```console
-$ sudo apt install -y libosmesa6-dev libgl1-mesa-glx libglfw3 patchelf
+$ bash setup_deps.sh
+```
+This script will:
+1.  Install `uv` (if missing).
+2.  Install `ffmpeg` and `exiftool` (via Homebrew on macOS, or check availability on Linux).
+3.  Create a virtual environment and sync core dependencies.
+
+### 2. Activate Environment
+```console
+$ source .venv/bin/activate
+(umi-workspace) $
 ```
 
-We recommend [Miniforge](https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3) instead of the standard anaconda distribution for faster installation: 
+### 3. (Optional) Training Dependencies
+To install heavy training libraries (Torch GPU, Diffusion Policy, Gym, MuJoCo) for simulation or training:
 ```console
-$ mamba env create -f conda_environment.yaml
+(umi-workspace) $ uv sync --extra train
+(umi-workspace) $ uv pip install -e packages/diffusion_policy
 ```
-
-Activate environment
-```console
-$ conda activate umi
-(umi)$ 
-```
+*Note: This might require additional system dependencies depending on your OS (e.g. `libosmesa6-dev` on Linux).*
 
 ## Running UMI SLAM pipeline
 Download example data
 ```console
-(umi)$ wget --recursive --no-parent --no-host-directories --cut-dirs=2 --relative --reject="index.html*" https://real.stanford.edu/umi/data/example_demo_session/
+(umi-workspace) $ wget --recursive --no-parent --no-host-directories --cut-dirs=2 --relative --reject="index.html*" https://real.stanford.edu/umi/data/example_demo_session/
 ```
 
 Run SLAM pipeline
 ```console
-(umi)$ python run_slam_pipeline.py example_demo_session
+(umi-workspace) $ python run_slam_pipeline.py example_demo_session
 
 ...
 Found following cameras:
@@ -73,28 +79,30 @@ Despite our significant effort on robustness improvement, OBR_SLAM3 is still the
 
 Generate dataset for training.
 ```console
-(umi)$ python scripts_slam_pipeline/07_generate_replay_buffer.py -o example_demo_session/dataset.zarr.zip example_demo_session
+(umi-workspace) $ python scripts_slam_pipeline/07_generate_replay_buffer.py -o example_demo_session/dataset.zarr.zip example_demo_session
 ```
 
 ## Training Diffusion Policy
+*Requires training dependencies installed (`uv sync --extra train`).*
+
 Single-GPU training. Tested to work on RTX3090 24GB.
 ```console
-(umi)$ python train.py --config-name=train_diffusion_unet_timm_umi_workspace task.dataset_path=example_demo_session/dataset.zarr.zip
+(umi-workspace) $ python train.py --config-name=train_diffusion_unet_timm_umi_workspace task.dataset_path=example_demo_session/dataset.zarr.zip
 ```
 
 Multi-GPU training.
 ```console
-(umi)$ accelerate --num_processes <ngpus> train.py --config-name=train_diffusion_unet_timm_umi_workspace task.dataset_path=example_demo_session/dataset.zarr.zip
+(umi-workspace) $ accelerate --num_processes <ngpus> train.py --config-name=train_diffusion_unet_timm_umi_workspace task.dataset_path=example_demo_session/dataset.zarr.zip
 ```
 
 Downloading in-the-wild cup arrangement dataset (processed).
 ```console
-(umi)$ wget https://real.stanford.edu/umi/data/zarr_datasets/cup_in_the_wild.zarr.zip
+(umi-workspace) $ wget https://real.stanford.edu/umi/data/zarr_datasets/cup_in_the_wild.zarr.zip
 ```
 
 Multi-GPU training.
 ```console
-(umi)$ accelerate --num_processes <ngpus> train.py --config-name=train_diffusion_unet_timm_umi_workspace task.dataset_path=cup_in_the_wild.zarr.zip
+(umi-workspace) $ accelerate --num_processes <ngpus> train.py --config-name=train_diffusion_unet_timm_umi_workspace task.dataset_path=cup_in_the_wild.zarr.zip
 ```
 
 ## 🦾 Real-world Deployment

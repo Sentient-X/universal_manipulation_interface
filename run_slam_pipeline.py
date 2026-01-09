@@ -7,7 +7,7 @@ import sys
 import os
 
 ROOT_DIR = os.path.dirname(__file__)
-sys.path.append(ROOT_DIR)
+# sys.path.append(ROOT_DIR)
 os.chdir(ROOT_DIR)
 
 # %%
@@ -26,6 +26,11 @@ def main(session_dir, calibration_dir):
     else:
         calibration_dir = pathlib.Path(calibration_dir)
     assert calibration_dir.is_dir()
+
+    if not session_dir:
+        ctx = click.get_current_context()
+        click.echo(ctx.get_help())
+        ctx.exit()
 
     for session in session_dir:
         session = pathlib.Path(os.path.expanduser(session)).absolute()
