@@ -13,6 +13,7 @@ os.chdir(ROOT_DIR)
 import pathlib
 import click
 import shutil
+import subprocess
 from exiftool import ExifToolHelper
 from umi.common.timecode_util import mp4_get_start_datetime
 
@@ -113,6 +114,29 @@ def main(session_dir):
                 rel_path = str(out_video_path.relative_to(session))
                 symlink_path = os.path.join(dots, rel_path)                
                 mp4_path.symlink_to(symlink_path)
+                
+                # check resolution and downscale if necessary
+                # gopro hero 13 support
+                meta = list(et.get_metadata(str(out_video_path)))[0]
+                width = meta['Track:ImageWidth']
+                height = meta['Track:ImageHeight']
+                if width > 2704:
+                    print(f"Downscaling {out_video_path.name} from {width}x{height} to 2704x2028")
+                    tmp_path = out_video_path.with_suffix('.tmp.mp4')
+                    cmd = [
+                        'ffmpeg',
+                        '-i', str(out_video_path),
+                        '-map', '0',
+                        '-c:v', 'libx264',
+                        '-vf', 'scale=2704:2028',
+                        '-c:a', 'copy',
+                        '-copy_unknown',
+                        '-y',
+                        str(tmp_path)
+                    ]
+                    print(' '.join(cmd))
+                    subprocess.run(cmd, check=True)
+                    tmp_path.replace(out_video_path)
 
 # %%
 if __name__ == '__main__':

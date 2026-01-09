@@ -1,0 +1,73 @@
+[project]
+name = "umi"
+version = "1.0.0"
+description = "Universal Manipulation Interface"
+requires-python = ">=3.9,<3.12"
+dependencies = [
+    # Core SLAM Pipeline dependencies
+    "numpy>=1.24",
+    "scipy>=1.11",
+    "pandas>=2.1",
+    "opencv-python>=4.7",
+    "click",
+    "pathlib",
+    "tqdm>=4.65",
+    "av>=10.0",
+    "scikit-video>=1.1",
+    "pyyaml>=6.0",
+    "PyExifTool>=0.5",
+    "zarr>=2.16",
+    "numcodecs>=0.11",
+    "numba>=0.57",
+    "matplotlib>=3.7",
+    "dill>=0.3.7",
+    "aiohttp>=3.9",
+    "aiofiles>=23.2",
+    # Basic torch for transforms/utilities (CPU okay)
+    "torch>=2.1.0",
+    "torchvision>=0.16.0",
+    "imagecodecs>=2023.9.18",
+    "pillow",
+    "k3d>=2.15", # for verify step
+]
+
+[project.optional-dependencies]
+train = [
+    # Training / Policy Libraries
+    "diffusers==0.18.2",
+    "hydra-core==1.2.0",
+    "wandb>=0.15.8",
+    "einops>=0.6.1",
+    "accelerate==0.24",
+    "timm>=0.9.7",
+    "scikit-fda>=0.9",
+    # Simulation / Gym (Problematic ones)
+    "gym @ file:///Users/satyamtiwary/Documents/Pytorch-Things/universal_manipulation_interface/gym-0.21.0-patched",
+    "robomimic==0.2.0",
+    "free-mujoco-py==2.1.6",
+    "v4l2py==2.2",
+    "ur-rtde==1.5.6",
+    "atomics==1.0.2",
+    "pynput==1.7.6",
+    "fastcrc==0.2",
+    "lmdb>=1.4",
+    "boto3>=1.33",
+    "ray[default]==2.8.0",
+    "threadpoolctl==3.2",
+    "cython>=0.29",
+    "ipykernel>=6.23",
+    # Git deps
+    "spnav @ git+https://github.com/cheng-chi/spnav.git@c1c938ebe3cc542db4685e0d13850ff1abfdb943",
+    "robosuite @ git+https://github.com/cheng-chi/robosuite.git@3f2c3116f1c0a1916e94bfa28da4d055927d1ab3",
+]
+
+[tool.uv]
+package = true
+
+[tool.setuptools]
+packages = ["umi", "diffusion_policy"]
+
+# Fallback for gym build just in case
+[build-system]
+requires = ["setuptools<65", "wheel"]
+build-backend = "setuptools.build_meta"
