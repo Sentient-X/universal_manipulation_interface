@@ -30,6 +30,7 @@ def runner(cmd, cwd, stdout_path, stderr_path, timeout, **kwargs):
             stdout=stdout_path.open('w'),
             stderr=stderr_path.open('w'),
             timeout=timeout,
+            check=True,
             **kwargs)
     except subprocess.TimeoutExpired as e:
         return e
@@ -67,10 +68,8 @@ def main(input_dir, map_path, docker_image, num_workers, max_lost_frames, timeou
             'pull',
             docker_image
         ]
-        p = subprocess.run(cmd)
-        if p.returncode != 0:
-            print("Docker pull failed!")
-            exit(1)
+        p = subprocess.run(cmd, check=True)
+
 
     with tqdm(total=len(input_video_dirs)) as pbar:
         # one chunk per thread, therefore no synchronization needed

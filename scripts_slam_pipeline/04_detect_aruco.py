@@ -69,7 +69,7 @@ def main(input_dir, camera_intrinsics, aruco_yaml, num_workers):
 
                 futures.add(executor.submit(
                     lambda x: subprocess.run(x, 
-                        capture_output=True), 
+                        capture_output=True, check=True), 
                     cmd))
                 # futures.add(executor.submit(lambda x: print(' '.join(x)), cmd))
 
