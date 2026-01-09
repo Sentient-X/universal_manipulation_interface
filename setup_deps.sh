@@ -36,7 +36,7 @@ echo "System dependencies are satisfied."
 # init/sync uv
 echo "Syncing python dependencies with uv..."
 uv sync
-# Explicitly install workspace packages in editable mode to ensure availability
+# Explicitly install workspace packages in editable mode
 uv pip install -e packages/umi
 
 echo "Setup complete!"

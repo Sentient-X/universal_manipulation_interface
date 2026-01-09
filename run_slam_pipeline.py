@@ -39,7 +39,7 @@ def main(session_dir, calibration_dir):
         script_path = script_dir.joinpath("00_process_videos.py")
         assert script_path.is_file()
         cmd = [
-            'python', str(script_path),
+            sys.executable, str(script_path),
             str(session)
         ]
         result = subprocess.run(cmd)
@@ -49,7 +49,7 @@ def main(session_dir, calibration_dir):
         script_path = script_dir.joinpath("01_extract_gopro_imu.py")
         assert script_path.is_file()
         cmd = [
-            'python', str(script_path),
+            sys.executable, str(script_path),
             str(session)
         ]
         result = subprocess.run(cmd)
@@ -64,7 +64,7 @@ def main(session_dir, calibration_dir):
         map_path = mapping_dir.joinpath('map_atlas.osa')
         if not map_path.is_file():
             cmd = [
-                'python', str(script_path),
+                sys.executable, str(script_path),
                 '--input_dir', str(mapping_dir),
                 '--map_path', str(map_path)
             ]
@@ -76,7 +76,7 @@ def main(session_dir, calibration_dir):
         script_path = script_dir.joinpath("03_batch_slam.py")
         assert script_path.is_file()
         cmd = [
-            'python', str(script_path),
+            sys.executable, str(script_path),
             '--input_dir', str(demo_dir),
             '--map_path', str(map_path)
         ]
@@ -92,7 +92,7 @@ def main(session_dir, calibration_dir):
         assert aruco_config.is_file()
 
         cmd = [
-            'python', str(script_path),
+            sys.executable, str(script_path),
             '--input_dir', str(demo_dir),
             '--camera_intrinsics', str(camera_intrinsics),
             '--aruco_yaml', str(aruco_config)
@@ -104,7 +104,7 @@ def main(session_dir, calibration_dir):
         script_path = script_dir.joinpath("05_run_calibrations.py")
         assert script_path.is_file()
         cmd = [
-            'python', str(script_path),
+            sys.executable, str(script_path),
             str(session)
         ]
         result = subprocess.run(cmd)
@@ -114,7 +114,7 @@ def main(session_dir, calibration_dir):
         script_path = script_dir.joinpath("06_generate_dataset_plan.py")
         assert script_path.is_file()
         cmd = [
-            'python', str(script_path),
+            sys.executable, str(script_path),
             '--input', str(session)
         ]
         result = subprocess.run(cmd)
