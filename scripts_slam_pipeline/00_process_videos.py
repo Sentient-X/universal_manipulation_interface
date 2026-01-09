@@ -118,8 +118,8 @@ def main(session_dir):
                 # check resolution and downscale if necessary
                 # gopro hero 13 support
                 meta = list(et.get_metadata(str(out_video_path)))[0]
-                width = meta['Track:ImageWidth']
-                height = meta['Track:ImageHeight']
+                width = meta.get('QuickTime:ImageWidth', meta.get('Track:ImageWidth', meta.get('File:ImageWidth', meta.get('ImageWidth'))))
+                height = meta.get('QuickTime:ImageHeight', meta.get('Track:ImageHeight', meta.get('File:ImageHeight', meta.get('ImageHeight'))))
                 if width > 2704:
                     print(f"Downscaling {out_video_path.name} from {width}x{height} to 2704x2028")
                     tmp_path = out_video_path.with_suffix('.tmp.mp4')
